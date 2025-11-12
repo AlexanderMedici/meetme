@@ -1,7 +1,20 @@
-import React from "react";
+import { Outlet } from "react-router-dom";
+import { Container } from "react-bootstrap";
+import Header from "./components/Header.jsx";
+import Footer from "./components/Footer.jsx";
 
 const App = () => {
-  return <h1>Welcome to VYBE</h1>;
+  return (
+    <>
+      <Header />
+      <main className="py-3">
+        <Container>
+          <Outlet />
+        </Container>
+      </main>
+      <Footer />
+    </>
+  );
 };
 
 export default App;
