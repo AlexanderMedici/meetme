@@ -18,14 +18,16 @@
     "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
     "client": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\"", 
-    "data:import": "node backend/seeder.js", 
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "data:import": "node backend/seeder.js",
     "data:destroy": "node backend/seeder.js -d"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "colors": "^1.4.0",
+    "cookie-parser": "^1.4.7",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.19.3"
   },
   "devDependencies": {
