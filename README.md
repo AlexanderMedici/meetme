@@ -1,4 +1,13 @@
-# Vybe – MERN E-commerce
+# Vybe - MERN E-commerce
+
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?logo=mongodb&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?logo=express&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=000)
+![Redux Toolkit](https://img.shields.io/badge/Redux%20Toolkit-764ABC?logo=redux&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-43853D?logo=node.js&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?logo=bootstrap&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-black?logo=jsonwebtokens&logoColor=white)
+![PayPal](https://img.shields.io/badge/PayPal-00457C?logo=paypal&logoColor=white)
 
 Live demo: https://vybe-e34x.onrender.com/
 
@@ -68,6 +77,5 @@ Vybe is a full-stack e-commerce app built on the MERN stack. It supports product
 - npm run server – backend with nodemon.
 - npm run client – frontend dev server.
 - npm run data:import / npm run data:destroy – seed utilities.
-
 
 
