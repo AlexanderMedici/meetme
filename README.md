@@ -1,6 +1,6 @@
 # Vybe – MERN E-commerce
 
-Live demo: https://your-live-site-url.example.com
+Live demo: https://vybe-e34x.onrender.com/
 
 ## Overview
 Vybe is a full-stack e-commerce app built on the MERN stack. It supports product browsing with search and pagination, cart/checkout, order placement with PayPal-style payments, user auth with role-based admin features, and admin dashboards for products/orders/users. The backend serves a REST API with JWT-secured routes, file uploads, and MongoDB persistence; the frontend is a React SPA using Redux Toolkit Query for data fetching and caching.
