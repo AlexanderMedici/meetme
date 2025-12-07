@@ -7,7 +7,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./assets/styles/index.css";
-import "./assets/styles/bootstrap.custom.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import LoginScreen from "./screens/LoginScreen";

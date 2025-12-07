@@ -18,6 +18,7 @@ import {
   DropdownSeparator,
   DropdownTrigger,
 } from "./ui/dropdown.jsx";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -46,10 +47,11 @@ const Header = () => {
   const logoutHandler = async () => {
     try {
       await logoutApiCall().unwrap();
+      setMenuOpen(false);
       dispatch(logout());
       navigate("/login");
     } catch (error) {
-      console.log(error);
+      toast.error(error?.data?.message || error.error || "Logout failed");
     }
   };
 

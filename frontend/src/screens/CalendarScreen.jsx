@@ -1,5 +1,4 @@
 import { useMemo, useState, useEffect } from "react";
-import { Button, Dropdown, Form, Modal } from "react-bootstrap";
 import { FaChevronLeft, FaChevronRight, FaMapMarkerAlt, FaLink, FaClock } from "react-icons/fa";
 import {
   useGetAppointmentsQuery,
@@ -8,6 +7,20 @@ import {
   useDeleteAppointmentMutation,
 } from "../slices/appointmentApiSlice";
 import { toast } from "react-toastify";
+import { Button } from "../components/ui/button";
+import {
+  Dialog,
+  DialogHeader,
+  DialogTitle,
+} from "../components/ui/dialog";
+import { Input } from "../components/ui/input";
+import { Textarea } from "../components/ui/textarea";
+import {
+  Dropdown,
+  DropdownContent,
+  DropdownItem,
+  DropdownTrigger,
+} from "../components/ui/dropdown";
 
 const formatDateKey = (date) => date.toISOString().split("T")[0];
 
@@ -224,10 +237,11 @@ const CalendarScreen = () => {
     <div className={`calendar-shell ${themeClass}`}>
       <div className="calendar-side">
         <div className="side-top">
-          <Dropdown className="w-100">
-            <Dropdown.Toggle className="create-btn w-200">+</Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item
+          <Dropdown>
+            <DropdownTrigger className="create-btn w-200">+</DropdownTrigger>
+            <DropdownContent align="start" width={200}>
+              <DropdownItem
+                type="button"
                 onClick={() => {
                   const today = formatDateKey(new Date());
                   setSelectedDate(today);
@@ -235,8 +249,9 @@ const CalendarScreen = () => {
                 }}
               >
                 Appointment
-              </Dropdown.Item>
-              <Dropdown.Item
+              </DropdownItem>
+              <DropdownItem
+                type="button"
                 onClick={() => {
                   const today = formatDateKey(new Date());
                   setSelectedDate(today);
@@ -244,23 +259,23 @@ const CalendarScreen = () => {
                 }}
               >
                 Event
-              </Dropdown.Item>
-            </Dropdown.Menu>
+              </DropdownItem>
+            </DropdownContent>
           </Dropdown>
         </div>
 
         <div className="mini-cal">
-          <div className="d-flex justify-content-between align-items-center mb-2">
+          <div className="mini-head">
             <span className="mini-month">
               {monthCursor.toLocaleString("default", {
                 month: "long",
                 year: "numeric",
               })}
             </span>
-            <div className="d-flex gap-1">
+            <div className="mini-nav">
               <Button
                 size="sm"
-                variant="outline-secondary"
+                variant="outline"
                 onClick={() =>
                   setMonthCursor(
                     new Date(
@@ -275,7 +290,7 @@ const CalendarScreen = () => {
               </Button>
               <Button
                 size="sm"
-                variant="outline-secondary"
+                variant="outline"
                 onClick={() =>
                   setMonthCursor(
                     new Date(
@@ -291,9 +306,9 @@ const CalendarScreen = () => {
             </div>
           </div>
           <div className="mini-grid">
-            {["S", "M", "T", "W", "T", "F", "S"].map((d) => (
+            {weekdayLabels.map((d) => (
               <div key={d} className="mini-label">
-                {d}
+                {d[0]}
               </div>
             ))}
             {miniMonth.map((day) => {
@@ -374,7 +389,7 @@ const CalendarScreen = () => {
                     >
                       {colIdx === 0 && (
                         <span className="time-label">
-                          {hour > 12 ? hour - 12 : hour}:00 {" "}
+                          {hour > 12 ? hour - 12 : hour}:00{" "}
                           {hour >= 12 ? "PM" : "AM"}
                         </span>
                       )}
@@ -407,14 +422,14 @@ const CalendarScreen = () => {
                       </div>
                       <Button
                         size="sm"
-                        variant="outline-light"
+                        variant="ghost"
                         className="appt-delete"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleDeleteAppointment(appt._id);
                         }}
                       >
-                        ×
+                        x
                       </Button>
                     </div>
                   ))}
@@ -424,29 +439,28 @@ const CalendarScreen = () => {
         </div>
       </div>
 
-      <Modal
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        centered
-        dialogClassName="cal-modal cal-modal--inline"
-      >
+      <Dialog open={showModal} onOpenChange={(open) => setShowModal(open)}>
         <div className="cal-modal__card">
-          <div className="cal-modal__header">
-            <div className="cal-modal__title">Add title</div>
+          <DialogHeader className="cal-modal__header">
+            <DialogTitle className="cal-modal__title">
+              {editingId ? "Edit appointment" : "Add title"}
+            </DialogTitle>
             <Button
               size="sm"
-              variant="outline-light"
+              variant="ghost"
               className="cal-modal__close"
+              type="button"
               onClick={() => setShowModal(false)}
             >
-              ×
+              x
             </Button>
-          </div>
+          </DialogHeader>
           <div className="cal-modal__tabs">
             <Button
               size="sm"
               className={activeTab === "event" ? "tab-active" : ""}
-              variant={activeTab === "event" ? "primary" : "outline-secondary"}
+              variant={activeTab === "event" ? "default" : "outline"}
+              type="button"
               onClick={() => setActiveTab("event")}
             >
               Event
@@ -454,7 +468,8 @@ const CalendarScreen = () => {
             <Button
               size="sm"
               className={activeTab === "task" ? "tab-active" : ""}
-              variant={activeTab === "task" ? "primary" : "outline-secondary"}
+              variant={activeTab === "task" ? "default" : "outline"}
+              type="button"
               onClick={() => setActiveTab("task")}
             >
               Task
@@ -462,17 +477,16 @@ const CalendarScreen = () => {
             <Button
               size="sm"
               className={activeTab === "appointment" ? "tab-active" : ""}
-              variant={
-                activeTab === "appointment" ? "primary" : "outline-secondary"
-              }
+              variant={activeTab === "appointment" ? "default" : "outline"}
+              type="button"
               onClick={() => setActiveTab("appointment")}
             >
-              Appointment schedule <span className="badge bg-secondary ms-1">New</span>
+              Appointment schedule <span className="ui-badge">New</span>
             </Button>
           </div>
-          <Form onSubmit={handleSubmit} className="cal-modal__form">
-            <Form.Group className="mb-3">
-              <Form.Control
+          <form onSubmit={handleSubmit} className="cal-modal__form">
+            <div className="mb-3">
+              <Input
                 value={appointmentForm.title}
                 onChange={(e) =>
                   setAppointmentForm({
@@ -484,7 +498,7 @@ const CalendarScreen = () => {
                 className="cal-modal__input cal-modal__input-lg"
                 required
               />
-            </Form.Group>
+            </div>
             <div className="cal-modal__row">
               <div className="flex-grow-1">
                 <div className="text-muted small d-flex align-items-center gap-2">
@@ -496,7 +510,7 @@ const CalendarScreen = () => {
                   })}
                 </div>
                 <div className="d-flex gap-2 align-items-center mt-2">
-                  <Form.Control
+                  <Input
                     type="time"
                     value={appointmentForm.startTime}
                     onChange={(e) =>
@@ -509,7 +523,7 @@ const CalendarScreen = () => {
                     required
                   />
                   <span className="text-muted small">-</span>
-                  <Form.Control
+                  <Input
                     type="time"
                     value={appointmentForm.endTime}
                     onChange={(e) =>
@@ -529,7 +543,7 @@ const CalendarScreen = () => {
                 <div className="text-muted small d-flex align-items-center gap-2">
                   <FaLink /> Add Google Meet video conferencing
                 </div>
-                <Form.Control
+                <Input
                   value={appointmentForm.meetingLink}
                   onChange={(e) =>
                     setAppointmentForm({
@@ -547,14 +561,13 @@ const CalendarScreen = () => {
                 <div className="text-muted small d-flex align-items-center gap-2">
                   <FaMapMarkerAlt /> Add location
                 </div>
-                <Form.Control
+                <Textarea
                   value={appointmentForm.notes}
                   onChange={(e) =>
                     setAppointmentForm({ ...appointmentForm, notes: e.target.value })
                   }
                   placeholder="Add description or a Google Drive attachment"
                   className="cal-modal__input mt-2"
-                  as="textarea"
                   rows={3}
                 />
               </div>
@@ -562,7 +575,7 @@ const CalendarScreen = () => {
             <div className="cal-modal__row">
               <div className="flex-grow-1">
                 <div className="text-muted small">Color</div>
-                <Form.Control
+                <input
                   type="color"
                   value={appointmentForm.color}
                   onChange={(e) =>
@@ -576,11 +589,11 @@ const CalendarScreen = () => {
               </div>
             </div>
             <div className="d-flex justify-content-between align-items-center mt-3">
-              <Button variant="link" className="text-light text-decoration-none">
+              <Button variant="ghost" type="button">
                 More options
               </Button>
               <div className="d-flex gap-2">
-                <Button variant="secondary" onClick={() => setShowModal(false)}>
+                <Button variant="ghost" type="button" onClick={() => setShowModal(false)}>
                   Cancel
                 </Button>
                 <Button type="submit" disabled={creating || updating}>
@@ -588,9 +601,9 @@ const CalendarScreen = () => {
                 </Button>
               </div>
             </div>
-          </Form>
+          </form>
         </div>
-      </Modal>
+      </Dialog>
     </div>
   );
 };

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
 import { useProfileMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 
 const ProfileScreen = () => {
   const [name, setName] = useState("");
@@ -43,60 +45,64 @@ const ProfileScreen = () => {
   };
 
   return (
-    <Row className="profile-card">
-      <Col md={6}>
+    <div className="profile-card">
+      <div className="profile-copy">
         <h2>Your profile</h2>
         <p className="text-muted">
           Update your login details and keep your MeetMe account secure.
         </p>
-      </Col>
-      <Col md={6}>
-        <Form onSubmit={submitHandler} className="glass-panel p-3 rounded-4">
-          <Form.Group controlId="name" className="my-2">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type="name"
+      </div>
+      <div className="profile-form">
+        <form onSubmit={submitHandler} className="glass-panel">
+          <div className="form-field">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              type="text"
               placeholder="Enter Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-          <Form.Group controlId="email" className="my-2">
-            <Form.Label>Email</Form.Label>
-            <Form.Control
+            />
+          </div>
+          <div className="form-field">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
               type="email"
               placeholder="Enter Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-          <Form.Group controlId="password" className="my-2">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
+            />
+          </div>
+          <div className="form-field">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
               type="password"
               placeholder="Enter Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-          <Form.Group controlId="confirmpassword" className="my-2">
-            <Form.Label>Confirm Password</Form.Label>
-            <Form.Control
+            />
+          </div>
+          <div className="form-field">
+            <Label htmlFor="confirmpassword">Confirm Password</Label>
+            <Input
+              id="confirmpassword"
               type="password"
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-          <div className="d-flex justify-content-end">
-            <Button type="submit" variant="primary" className="my-2">
+            />
+          </div>
+          <div className="form-actions">
+            <Button type="submit" className="my-2">
               Save changes
             </Button>
           </div>
           {loadingUpdateProfile && <Loader />}
-        </Form>
-      </Col>
-    </Row>
+        </form>
+      </div>
+    </div>
   );
 };
 

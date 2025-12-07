@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { toast } from "react-toastify";
-import { Button, Form, Spinner } from "react-bootstrap";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -44,9 +46,11 @@ const LoginScreen = () => {
         <h2 className="auth-title">Welcome back</h2>
         <p className="auth-subtitle">Sign in to continue to MeetMe Calendar.</p>
 
-        <Form onSubmit={submitHandler} className="auth-form">
-          <Form.Group controlId="email" className="mb-3">
-            <Form.Control
+        <form onSubmit={submitHandler} className="auth-form">
+          <div className="form-field">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
               type="email"
               placeholder="Email"
               value={email}
@@ -54,9 +58,11 @@ const LoginScreen = () => {
               className="auth-input"
               required
             />
-          </Form.Group>
-          <Form.Group controlId="password" className="mb-3">
-            <Form.Control
+          </div>
+          <div className="form-field">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
               type="password"
               placeholder="Password"
               value={password}
@@ -64,16 +70,12 @@ const LoginScreen = () => {
               className="auth-input"
               required
             />
-          </Form.Group>
+          </div>
 
-          <Button
-            type="submit"
-            className="auth-submit w-100"
-            disabled={isLoading}
-          >
-            {isLoading ? <Spinner size="sm" /> : "Sign in"}
+          <Button type="submit" className="auth-submit w-100" disabled={isLoading}>
+            {isLoading ? "Signing in..." : "Sign in"}
           </Button>
-        </Form>
+        </form>
 
         <div className="auth-divider" />
 

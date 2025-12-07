@@ -1,5 +1,4 @@
 import { Outlet, useLocation } from "react-router-dom";
-import { Container } from "react-bootstrap";
 import Header from "./components/Header.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,10 +14,10 @@ const App = () => {
   return (
     <>
       {!hideChrome && <Header />}
-      <main className={isCalendar ? "main-full" : "py-3"}>
-        <Container fluid={hideChrome || isCalendar ? true : "lg"}>
+      <main className={isCalendar ? "main-full" : "app-main"}>
+        <div className="app-container">
           <Outlet />
-        </Container>
+        </div>
       </main>
       {!hideChrome && <Footer />}
       <ToastContainer />

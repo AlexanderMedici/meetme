@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Form, Spinner } from "react-bootstrap";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 import { useRegisterMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { toast } from "react-toastify";
@@ -50,16 +52,18 @@ const RegisterScreen = () => {
       <div className="auth-card">
         <div className="auth-card__header">
           <div className="auth-g-badge">G</div>
-          <span>Create your Google account</span>
+          <span>Create your MeetMe account</span>
         </div>
         <h2 className="auth-title">Create an account</h2>
         <p className="auth-subtitle">
           Sign up to start scheduling with MeetMe Calendar.
         </p>
 
-        <Form onSubmit={submitHandler} className="auth-form">
-          <Form.Group className="mb-3" controlId="name">
-            <Form.Control
+        <form onSubmit={submitHandler} className="auth-form">
+          <div className="form-field">
+            <Label htmlFor="name">Full name</Label>
+            <Input
+              id="name"
               type="text"
               placeholder="Full name"
               value={name}
@@ -67,10 +71,12 @@ const RegisterScreen = () => {
               className="auth-input"
               required
             />
-          </Form.Group>
+          </div>
 
-          <Form.Group className="mb-3" controlId="email">
-            <Form.Control
+          <div className="form-field">
+            <Label htmlFor="email">Email address</Label>
+            <Input
+              id="email"
               type="email"
               placeholder="Email address"
               value={email}
@@ -78,10 +84,12 @@ const RegisterScreen = () => {
               className="auth-input"
               required
             />
-          </Form.Group>
+          </div>
 
-          <Form.Group className="mb-3" controlId="password">
-            <Form.Control
+          <div className="form-field">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
               type="password"
               placeholder="Password"
               value={password}
@@ -89,9 +97,11 @@ const RegisterScreen = () => {
               className="auth-input"
               required
             />
-          </Form.Group>
-          <Form.Group className="mb-4" controlId="confirmPassword">
-            <Form.Control
+          </div>
+          <div className="form-field">
+            <Label htmlFor="confirmPassword">Confirm password</Label>
+            <Input
+              id="confirmPassword"
               type="password"
               placeholder="Confirm password"
               value={confirmPassword}
@@ -99,16 +109,16 @@ const RegisterScreen = () => {
               className="auth-input"
               required
             />
-          </Form.Group>
+          </div>
 
           <Button
             disabled={isLoading}
             type="submit"
             className="auth-submit w-100"
           >
-            {isLoading ? <Spinner size="sm" /> : "Create account"}
+            {isLoading ? "Creating..." : "Create account"}
           </Button>
-        </Form>
+        </form>
 
         <div className="auth-divider" />
 
