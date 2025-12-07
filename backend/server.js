@@ -27,8 +27,8 @@ if (process.env.NODE_ENV === "production") {
   const __dirname = path.resolve();
   app.use(express.static(path.join(__dirname, "/frontend/build")));
 
-  // Serve the SPA for any non-API route
-  app.get("*", (req, res) => {
+  // Serve the SPA for any non-API route (Express 5 needs an explicit wildcard)
+  app.get("/*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
   });
 } else {
