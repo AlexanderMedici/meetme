@@ -6,7 +6,7 @@
 ![Static Badge](https://img.shields.io/badge/Backend-Node%2FExpress-green)
 ![Static Badge](https://img.shields.io/badge/Status-In_Development-orange)
 
-Live site: **https://your-live-link.example.com**
+Live site: **https://meetme-1-mu1h.onrender.com/login**
 
 ## Features
 - Authenticated calendar with week grid, mini-month selector, and keyboard/arrow navigation.
