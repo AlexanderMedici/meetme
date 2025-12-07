@@ -44,7 +44,7 @@ const LoginScreen = () => {
           <span>Sign in</span>
         </div>
         <h2 className="auth-title">Welcome back</h2>
-        <p className="auth-subtitle">Sign in to continue to MeetMe Calendar.</p>
+        <p className="auth-subtitle">Sign in to continue to MeetMe.</p>
 
         <form onSubmit={submitHandler} className="auth-form">
           <div className="form-field">
@@ -72,7 +72,11 @@ const LoginScreen = () => {
             />
           </div>
 
-          <Button type="submit" className="auth-submit w-100" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="auth-submit w-100"
+            disabled={isLoading}
+          >
             {isLoading ? "Signing in..." : "Sign in"}
           </Button>
         </form>

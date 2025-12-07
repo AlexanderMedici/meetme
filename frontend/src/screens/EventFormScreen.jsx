@@ -5,7 +5,14 @@ import {
   useCreateAppointmentMutation,
   useUpdateAppointmentMutation,
 } from "../slices/appointmentApiSlice";
-import { Dialog, DialogBody, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../components/ui/dialog";
+import {
+  Dialog,
+  DialogBody,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../components/ui/dialog";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -54,7 +61,15 @@ const EventFormScreen = () => {
       notes: notesParam,
       color: colorParam,
     }));
-  }, [defaultDate, titleParam, startParam, endParam, linkParam, notesParam, colorParam]);
+  }, [
+    defaultDate,
+    titleParam,
+    startParam,
+    endParam,
+    linkParam,
+    notesParam,
+    colorParam,
+  ]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -114,7 +129,9 @@ const EventFormScreen = () => {
         <form onSubmit={handleSubmit} className="event-form-card">
           <DialogHeader>
             <div>
-              <DialogTitle>{idParam ? "Edit event" : "Create a new event"}</DialogTitle>
+              <DialogTitle>
+                {idParam ? "Edit event" : "Create a new event"}
+              </DialogTitle>
               <DialogDescription>
                 Drop the essentials and we will slot it into your calendar.
               </DialogDescription>
@@ -153,7 +170,7 @@ const EventFormScreen = () => {
               type="button"
               onClick={() => setActiveTab("schedule")}
             >
-              Appointment schedule <span className="ui-badge">New</span>
+              + <span className="ui-badge">Schedule Appointment</span>
             </Button>
           </div>
 

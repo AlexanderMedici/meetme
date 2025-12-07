@@ -1,5 +1,11 @@
 import { useMemo, useState, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight, FaMapMarkerAlt, FaLink, FaClock } from "react-icons/fa";
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaMapMarkerAlt,
+  FaLink,
+  FaClock,
+} from "react-icons/fa";
 import {
   useGetAppointmentsQuery,
   useCreateAppointmentMutation,
@@ -8,11 +14,7 @@ import {
 } from "../slices/appointmentApiSlice";
 import { toast } from "react-toastify";
 import { Button } from "../components/ui/button";
-import {
-  Dialog,
-  DialogHeader,
-  DialogTitle,
-} from "../components/ui/dialog";
+import { Dialog, DialogHeader, DialogTitle } from "../components/ui/dialog";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import {
@@ -23,6 +25,7 @@ import {
 } from "../components/ui/dropdown";
 
 const formatDateKey = (date) => date.toISOString().split("T")[0];
+const SLOT_HEIGHT = 48; // px per hour
 
 const startOfMonthGrid = (current) => {
   const first = new Date(current.getFullYear(), current.getMonth(), 1);
@@ -179,6 +182,18 @@ const CalendarScreen = () => {
     });
   };
 
+  const positionForAppt = (appt) => {
+    const start = new Date(appt.start);
+    const end = new Date(appt.end);
+    const startHours = start.getHours();
+    const startMinutes = start.getMinutes();
+    const durationMinutes = Math.max(15, (end - start) / 60000);
+    const top =
+      Math.max(0, (startHours - 1) * 60 + startMinutes) * (SLOT_HEIGHT / 60);
+    const height = (durationMinutes / 60) * SLOT_HEIGHT;
+    return { top, height };
+  };
+
   const miniMonth = useMemo(() => {
     const start = startOfMonthGrid(monthCursor);
     const end = endOfMonthGrid(monthCursor);
@@ -193,6 +208,12 @@ const CalendarScreen = () => {
 
   const themeClass = "cal-dark";
   const weekdayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  const handleMiniSelect = (dateKey) => {
+    setSelectedDate(dateKey);
+    setMonthCursor(new Date(dateKey));
+    openModal({ date: dateKey });
+  };
 
   useEffect(() => {
     const navHandler = (e) => {
@@ -323,7 +344,7 @@ const CalendarScreen = () => {
                   className={`mini-cell ${inMonth ? "" : "muted"} ${
                     isSelected ? "mini-selected" : ""
                   } ${isToday ? "mini-today" : ""}`}
-                  onClick={() => setSelectedDate(key)}
+                  onClick={() => handleMiniSelect(key)}
                 >
                   {day.getDate()}
                 </button>
@@ -396,43 +417,53 @@ const CalendarScreen = () => {
                     </div>
                   );
                 })}
-                {appointments
-                  .filter(
-                    (appt) =>
-                      formatDateKey(new Date(appt.start)) === formatDateKey(day)
-                  )
-                  .map((appt) => (
-                    <div
-                      key={appt._id}
-                      className="appt-block"
-                      style={{ backgroundColor: appt.color || "#0b57d0" }}
-                      onClick={() => handleEditAppointment(appt)}
-                    >
-                      <div className="appt-title">{appt.title}</div>
-                      <div className="appt-time">
-                        {new Date(appt.start).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                        {" - "}
-                        {new Date(appt.end).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </div>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="appt-delete"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteAppointment(appt._id);
-                        }}
-                      >
-                        x
-                      </Button>
-                    </div>
-                  ))}
+                <div className="appt-layer">
+                  {appointments
+                    .filter(
+                      (appt) =>
+                        formatDateKey(new Date(appt.start)) ===
+                        formatDateKey(day)
+                    )
+                    .map((appt) => {
+                      const pos = positionForAppt(appt);
+                      return (
+                        <div
+                          key={appt._id}
+                          className="appt-block"
+                          style={{
+                            backgroundColor: appt.color || "#0b57d0",
+                            top: pos.top,
+                            height: pos.height,
+                          }}
+                          onClick={() => handleEditAppointment(appt)}
+                        >
+                          <div className="appt-title">{appt.title}</div>
+                          <div className="appt-time">
+                            {new Date(appt.start).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                            {" - "}
+                            {new Date(appt.end).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="appt-delete"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteAppointment(appt._id);
+                            }}
+                          >
+                            x
+                          </Button>
+                        </div>
+                      );
+                    })}
+                </div>
               </div>
             ))}
           </div>
@@ -481,7 +512,7 @@ const CalendarScreen = () => {
               type="button"
               onClick={() => setActiveTab("appointment")}
             >
-              Appointment schedule <span className="ui-badge">New</span>
+              Schedule Appointment <span className="ui-badge"> +</span>
             </Button>
           </div>
           <form onSubmit={handleSubmit} className="cal-modal__form">
@@ -564,7 +595,10 @@ const CalendarScreen = () => {
                 <Textarea
                   value={appointmentForm.notes}
                   onChange={(e) =>
-                    setAppointmentForm({ ...appointmentForm, notes: e.target.value })
+                    setAppointmentForm({
+                      ...appointmentForm,
+                      notes: e.target.value,
+                    })
                   }
                   placeholder="Add description or a Google Drive attachment"
                   className="cal-modal__input mt-2"
@@ -593,7 +627,11 @@ const CalendarScreen = () => {
                 More options
               </Button>
               <div className="d-flex gap-2">
-                <Button variant="ghost" type="button" onClick={() => setShowModal(false)}>
+                <Button
+                  variant="ghost"
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                >
                   Cancel
                 </Button>
                 <Button type="submit" disabled={creating || updating}>
