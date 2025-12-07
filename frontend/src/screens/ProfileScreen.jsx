@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
@@ -14,6 +15,7 @@ const ProfileScreen = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
   const [updateProfile, { isLoading: loadingUpdateProfile }] =
@@ -51,6 +53,9 @@ const ProfileScreen = () => {
         <p className="text-muted">
           Update your login details and keep your MeetMe account secure.
         </p>
+        <Button variant="outline" onClick={() => navigate("/")} className="mt-2">
+          ← Back to calendar
+        </Button>
       </div>
       <div className="profile-form">
         <form onSubmit={submitHandler} className="glass-panel">
