@@ -32,24 +32,34 @@ export const Dialog = ({ open, onOpenChange, children }) => {
   );
 };
 
-export const DialogHeader = ({ className = "", ...props }) => (
-  <div className={`ui-dialog-header ${className}`} {...props} />
+export const DialogHeader = ({ className = "", children, ...props }) => (
+  <div className={`ui-dialog-header ${className}`} {...props}>
+    {children}
+  </div>
 );
 
-export const DialogTitle = ({ className = "", ...props }) => (
-  <h3 className={`ui-dialog-title ${className}`} {...props} />
+export const DialogTitle = ({ className = "", children, ...props }) => (
+  <h3 className={`ui-dialog-title ${className}`} {...props}>
+    {children}
+  </h3>
 );
 
-export const DialogDescription = ({ className = "", ...props }) => (
-  <p className={`ui-dialog-description ${className}`} {...props} />
+export const DialogDescription = ({ className = "", children, ...props }) => (
+  <p className={`ui-dialog-description ${className}`} {...props}>
+    {children}
+  </p>
 );
 
-export const DialogFooter = ({ className = "", ...props }) => (
-  <div className={`ui-dialog-footer ${className}`} {...props} />
+export const DialogFooter = ({ className = "", children, ...props }) => (
+  <div className={`ui-dialog-footer ${className}`} {...props}>
+    {children}
+  </div>
 );
 
-export const DialogBody = ({ className = "", ...props }) => (
-  <div className={`ui-dialog-body ${className}`} {...props} />
+export const DialogBody = ({ className = "", children, ...props }) => (
+  <div className={`ui-dialog-body ${className}`} {...props}>
+    {children}
+  </div>
 );
 
 export default Dialog;

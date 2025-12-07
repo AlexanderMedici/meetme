@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 
 const DropdownContext = createContext(null);
 
@@ -9,10 +9,10 @@ export const Dropdown = ({ open, onOpenChange, children }) => {
   const isControlled = typeof open === "boolean";
   const isOpen = isControlled ? open : internalOpen;
 
-  const setOpen = (next) => {
+  const setOpen = useCallback((next) => {
     if (!isControlled) setInternalOpen(next);
     onOpenChange?.(next);
-  };
+  }, [isControlled, onOpenChange]);
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -34,7 +34,7 @@ export const Dropdown = ({ open, onOpenChange, children }) => {
       document.removeEventListener("pointerdown", handleClickOutside);
       document.removeEventListener("keydown", handleEsc);
     };
-  }, [isOpen]);
+  }, [isOpen, setOpen]);
 
   return (
     <DropdownContext.Provider value={{ isOpen, setOpen, triggerRef, contentRef }}>
@@ -70,7 +70,7 @@ export const DropdownContent = ({
 }) => {
   const ctx = useContext(DropdownContext);
   if (!ctx) throw new Error("DropdownContent must be used inside Dropdown");
-  const { isOpen, contentRef, triggerRef } = ctx;
+  const { isOpen, contentRef } = ctx;
 
   const computedStyle = {
     minWidth: width,
