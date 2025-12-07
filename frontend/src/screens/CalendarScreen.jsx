@@ -43,6 +43,14 @@ const endOfMonthGrid = (current) => {
   return end;
 };
 
+const startOfWeek = (dateKey) => {
+  const base = new Date(dateKey);
+  const day = base.getDay(); // 0-6, Sun = 0
+  const start = new Date(base);
+  start.setDate(base.getDate() - day);
+  return start;
+};
+
 const CalendarScreen = () => {
   const [monthCursor, setMonthCursor] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(formatDateKey(new Date()));
@@ -61,12 +69,25 @@ const CalendarScreen = () => {
     color: "#0b57d0",
   });
 
-  const gridStart = useMemo(() => startOfMonthGrid(monthCursor), [monthCursor]);
-  const gridEnd = useMemo(() => endOfMonthGrid(monthCursor), [monthCursor]);
+  const gridStart = useMemo(() => startOfWeek(selectedDate), [selectedDate]);
+  const gridEnd = useMemo(() => {
+    const end = new Date(gridStart);
+    end.setDate(end.getDate() + 6);
+    return end;
+  }, [gridStart]);
+
+  const monthRangeStart = useMemo(
+    () => startOfMonthGrid(monthCursor),
+    [monthCursor]
+  );
+  const monthRangeEnd = useMemo(
+    () => endOfMonthGrid(monthCursor),
+    [monthCursor]
+  );
 
   const { data: appointments = [] } = useGetAppointmentsQuery({
-    from: gridStart.toISOString(),
-    to: gridEnd.toISOString(),
+    from: monthRangeStart.toISOString(),
+    to: monthRangeEnd.toISOString(),
   });
 
   const [createAppointment, { isLoading: creating }] =
@@ -95,12 +116,10 @@ const CalendarScreen = () => {
       color: "#0b57d0",
       ...overrides,
     });
-    setEditingId(null);
   };
 
   const openModal = (payload = {}) => {
-    if (payload.id) setEditingId(payload.id);
-    else setEditingId(null);
+    setEditingId(payload.id || null);
     if (payload.date) setSelectedDate(payload.date);
     resetForm({
       ...payload,
@@ -297,30 +316,24 @@ const CalendarScreen = () => {
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() =>
-                  setMonthCursor(
-                    new Date(
-                      monthCursor.getFullYear(),
-                      monthCursor.getMonth() - 1,
-                      1
-                    )
-                  )
-                }
+                onClick={() => {
+                  const next = new Date(selectedDate);
+                  next.setDate(next.getDate() - 1);
+                  setSelectedDate(formatDateKey(next));
+                  setMonthCursor(next);
+                }}
               >
                 <FaChevronLeft />
               </Button>
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() =>
-                  setMonthCursor(
-                    new Date(
-                      monthCursor.getFullYear(),
-                      monthCursor.getMonth() + 1,
-                      1
-                    )
-                  )
-                }
+                onClick={() => {
+                  const next = new Date(selectedDate);
+                  next.setDate(next.getDate() + 1);
+                  setSelectedDate(formatDateKey(next));
+                  setMonthCursor(next);
+                }}
               >
                 <FaChevronRight />
               </Button>
@@ -350,6 +363,46 @@ const CalendarScreen = () => {
                 </button>
               );
             })}
+          </div>
+          <div className="mini-appt-list">
+            <div className="mini-appt-list__title">Appointments</div>
+            {appointments
+              .filter(
+                (appt) =>
+                  formatDateKey(new Date(appt.start)) === selectedDate
+              )
+              .sort((a, b) => new Date(a.start) - new Date(b.start))
+              .map((appt) => (
+                <button
+                  key={appt._id}
+                  className="mini-appt-list__item"
+                  onClick={() => handleEditAppointment(appt)}
+                  type="button"
+                >
+                  <span className="mini-appt-list__dot" style={{ backgroundColor: appt.color || "#0b57d0" }} />
+                  <div className="mini-appt-list__meta">
+                    <div className="mini-appt-list__title-text">
+                      {appt.title || "Untitled"}
+                    </div>
+                    <div className="mini-appt-list__time">
+                      {new Date(appt.start).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}{" "}
+                      -{" "}
+                      {new Date(appt.end).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </div>
+                  </div>
+                </button>
+              ))}
+            {appointments.filter(
+              (appt) => formatDateKey(new Date(appt.start)) === selectedDate
+            ).length === 0 && (
+              <div className="mini-appt-list__empty">No appointments</div>
+            )}
           </div>
         </div>
       </div>

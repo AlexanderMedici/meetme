@@ -20,6 +20,11 @@ const LoginScreen = () => {
   const redirect = sp.get("redirect") || "/";
 
   useEffect(() => {
+    document.body.classList.add("auth-page");
+    return () => document.body.classList.remove("auth-page");
+  }, []);
+
+  useEffect(() => {
     if (userInfo) {
       navigate(redirect);
     }
