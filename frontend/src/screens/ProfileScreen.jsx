@@ -1,15 +1,10 @@
 import { useState, useEffect } from "react";
-import { Table, Form, Button, Row, Col } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { toast, Toast } from "react-toastify";
-import Message from "../components/Message";
+import { toast } from "react-toastify";
 import Loader from "../components/Loader";
 import { useProfileMutation } from "../slices/usersApiSlice";
-import { useGetMyOrdersQuery } from "../slices/orderApiSlice";
 import { setCredentials } from "../slices/authSlice";
-import { FaTimes } from "react-icons/fa";
-import { Link } from "react-router-dom";
 
 const ProfileScreen = () => {
   const [name, setName] = useState("");
@@ -22,8 +17,6 @@ const ProfileScreen = () => {
   const [updateProfile, { isLoading: loadingUpdateProfile }] =
     useProfileMutation();
 
-  // Default orders to empty array so map is safe before data arrives
-  const { data: orders = [], isLoading, error } = useGetMyOrdersQuery();
   useEffect(() => {
     setName(userInfo.name);
     setEmail(userInfo.email);
@@ -32,7 +25,7 @@ const ProfileScreen = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      toast.error("Password do no match");
+      toast.error("Password do not match");
     } else {
       try {
         const res = await updateProfile({
@@ -50,10 +43,15 @@ const ProfileScreen = () => {
   };
 
   return (
-    <Row>
-      <Col md={3}>
-        <h2>User Profile</h2>
-        <Form onSubmit={submitHandler}>
+    <Row className="profile-card">
+      <Col md={6}>
+        <h2>Your profile</h2>
+        <p className="text-muted">
+          Update your login details and keep your MeetMe account secure.
+        </p>
+      </Col>
+      <Col md={6}>
+        <Form onSubmit={submitHandler} className="glass-panel p-3 rounded-4">
           <Form.Group controlId="name" className="my-2">
             <Form.Label>Name</Form.Label>
             <Form.Control
@@ -84,73 +82,19 @@ const ProfileScreen = () => {
           <Form.Group controlId="confirmpassword" className="my-2">
             <Form.Label>Confirm Password</Form.Label>
             <Form.Control
-              type="confirmpassword"
+              type="password"
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             ></Form.Control>
-            <Button type="submit" variant="primary" className="my-2">
-              Update
-            </Button>
-            {loadingUpdateProfile && <Loader />}
           </Form.Group>
+          <div className="d-flex justify-content-end">
+            <Button type="submit" variant="primary" className="my-2">
+              Save changes
+            </Button>
+          </div>
+          {loadingUpdateProfile && <Loader />}
         </Form>
-      </Col>
-      <Col md={9}>
-        <h2>My Orders</h2>
-        {isLoading ? (
-          <Loader />
-        ) : error ? (
-          <Message variant="danger">
-            {error?.data?.message || error.error}
-          </Message>
-        ) : (
-          <Table striped hover responsive className="table-sm">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>DATE</th>
-                <th>TOTAL</th>
-                <th>PAID</th>
-                <th>DELIVERED</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order._id}>
-                  <td>{order._id}</td>
-                  <td>{order.createdAt.substring(0, 10)}</td>
-                  <td>{order.totalPrice}</td>
-                  <td>
-                    {order.isPaid ? (
-                      order.paidAt.substring(0, 10)
-                    ) : (
-                      <FaTimes style={{ color: "red" }} />
-                    )}
-                  </td>
-                  <td>
-                    {order.isDelivered ? (
-                      order.deliveredAt.substring(0, 10)
-                    ) : (
-                      <FaTimes style={{ color: "red" }} />
-                    )}
-                  </td>
-                  <td>
-                    <Button
-                      as={Link}
-                      to={`/order/${order._id}`}
-                      className="btn-sm"
-                      variant="light"
-                    >
-                      Details
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        )}
       </Col>
     </Row>
   );

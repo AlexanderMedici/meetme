@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import Loader from "../components/Loader";
-import FormContainer from "../components/FormContainer";
-
 import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { toast } from "react-toastify";
+import { Button, Form, Spinner } from "react-bootstrap";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -38,46 +35,60 @@ const LoginScreen = () => {
   };
 
   return (
-    <FormContainer>
-      <h1>Sign In</h1>
+    <div className="auth-shell">
+      <div className="auth-card">
+        <div className="auth-card__header">
+          <div className="auth-g-badge">G</div>
+          <span>Sign in</span>
+        </div>
+        <h2 className="auth-title">Welcome back</h2>
+        <p className="auth-subtitle">Sign in to continue to MeetMe Calendar.</p>
 
-      <Form onSubmit={submitHandler}>
-        <Form.Group controlId="email" className="my-3">
-          <Form.Label>Email Address</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Enter Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
-        <Form.Group controlId="password" className="my-3">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+        <Form onSubmit={submitHandler} className="auth-form">
+          <Form.Group controlId="email" className="mb-3">
+            <Form.Control
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="auth-input"
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="password" className="mb-3">
+            <Form.Control
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="auth-input"
+              required
+            />
+          </Form.Group>
 
-        <Button
-          type="submit"
-          variant="primary"
-          className="mt-3"
-          disabled={isLoading}
-        >
-          Sign In
-        </Button>
-        {isLoading && <Loader />}
-      </Form>
-      <Row className="py-3">
-        New User?{" "}
-        <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>
-          Register
-        </Link>
-      </Row>
-    </FormContainer>
+          <Button
+            type="submit"
+            className="auth-submit w-100"
+            disabled={isLoading}
+          >
+            {isLoading ? <Spinner size="sm" /> : "Sign in"}
+          </Button>
+        </Form>
+
+        <div className="auth-divider" />
+
+        <div className="auth-footer">
+          <span>New to MeetMe?</span>
+          <Link
+            to={redirect ? `/register?redirect=${redirect}` : "/register"}
+            className="auth-link"
+          >
+            Create an account
+          </Link>
+        </div>
+      </div>
+      <div className="auth-lang">English (United States)</div>
+    </div>
   );
 };
 

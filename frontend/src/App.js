@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import Header from "./components/Header.jsx";
 import { ToastContainer } from "react-toastify";
@@ -6,15 +6,21 @@ import "react-toastify/dist/ReactToastify.css";
 import Footer from "./components/Footer.jsx";
 
 const App = () => {
+  const location = useLocation();
+  const hideChrome =
+    location.pathname.startsWith("/login") ||
+    location.pathname.startsWith("/register");
+  const isCalendar = location.pathname === "/";
+
   return (
     <>
-      <Header />
-      <main className="py-3">
-        <Container>
+      {!hideChrome && <Header />}
+      <main className={isCalendar ? "main-full" : "py-3"}>
+        <Container fluid={hideChrome || isCalendar ? true : "lg"}>
           <Outlet />
         </Container>
       </main>
-      <Footer />
+      {!hideChrome && <Footer />}
       <ToastContainer />
     </>
   );

@@ -1,17 +1,17 @@
 {
-  "name": "vybe",
+  "name": "meetme",
   "version": "1.0.0",
-  "description": "Ecommerce Application MERN Stack ",
-  "homepage": "https://github.com/AlexanderMedici/vybe#readme",
+  "description": "Meet-style calendar & task app (MERN)",
+  "homepage": "",
   "bugs": {
-    "url": "https://github.com/AlexanderMedici/vybe/issues"
+    "url": ""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AlexanderMedici/vybe.git"
+    "url": ""
   },
   "license": "MIT",
-  "author": "Alexnader Medici",
+  "author": "",
   "type": "module",
   "main": "server.js",
   "scripts": {
@@ -19,8 +19,6 @@
     "server": "nodemon backend/server.js",
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "data:import": "node backend/seeder.js",
-    "data:destroy": "node backend/seeder.js -d", 
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "dependencies": {
@@ -30,7 +28,8 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.19.3",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "react-icons": "^5.5.0"
   },
   "devDependencies": {
     "concurrently": "^9.2.1",

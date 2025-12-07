@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import Loader from "../components/Loader";
-import FormContainer from "../components/FormContainer";
-
+import { Button, Form, Spinner } from "react-bootstrap";
 import { useRegisterMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { toast } from "react-toastify";
@@ -49,64 +46,84 @@ const RegisterScreen = () => {
   };
 
   return (
-    <FormContainer>
-      <h1>Sign Up</h1>
-      <Form onSubmit={submitHandler}>
-        <Form.Group className="my-2" controlId="name">
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            type="name"
-            placeholder="Enter name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+    <div className="auth-shell">
+      <div className="auth-card">
+        <div className="auth-card__header">
+          <div className="auth-g-badge">G</div>
+          <span>Create your Google account</span>
+        </div>
+        <h2 className="auth-title">Create an account</h2>
+        <p className="auth-subtitle">
+          Sign up to start scheduling with MeetMe Calendar.
+        </p>
 
-        <Form.Group className="my-2" controlId="email">
-          <Form.Label>Email Address</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+        <Form onSubmit={submitHandler} className="auth-form">
+          <Form.Group className="mb-3" controlId="name">
+            <Form.Control
+              type="text"
+              placeholder="Full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="auth-input"
+              required
+            />
+          </Form.Group>
 
-        <Form.Group className="my-2" controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
-        <Form.Group className="my-2" controlId="confirmPassword">
-          <Form.Label>Confirm Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Confirm password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+          <Form.Group className="mb-3" controlId="email">
+            <Form.Control
+              type="email"
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="auth-input"
+              required
+            />
+          </Form.Group>
 
-        <Button disabled={isLoading} type="submit" variant="primary">
-          Register
-        </Button>
+          <Form.Group className="mb-3" controlId="password">
+            <Form.Control
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="auth-input"
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-4" controlId="confirmPassword">
+            <Form.Control
+              type="password"
+              placeholder="Confirm password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="auth-input"
+              required
+            />
+          </Form.Group>
 
-        {isLoading && <Loader />}
-      </Form>
+          <Button
+            disabled={isLoading}
+            type="submit"
+            className="auth-submit w-100"
+          >
+            {isLoading ? <Spinner size="sm" /> : "Create account"}
+          </Button>
+        </Form>
 
-      <Row className="py-3">
-        <Col>
-          Already have an account?{" "}
-          <Link to={redirect ? `/login?redirect=${redirect}` : "/login"}>
-            Login
+        <div className="auth-divider" />
+
+        <div className="auth-footer">
+          <span>Already have an account?</span>
+          <Link
+            to={redirect ? `/login?redirect=${redirect}` : "/login"}
+            className="auth-link"
+          >
+            Sign in
           </Link>
-        </Col>
-      </Row>
-    </FormContainer>
+        </div>
+      </div>
+      <div className="auth-lang">English (United States)</div>
+    </div>
   );
 };
 
